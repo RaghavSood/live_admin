@@ -111,11 +111,12 @@ defmodule LiveAdmin.Resource do
       |> Enum.into(%{})
       |> Map.put_new(:page, 1)
       |> Map.put_new(:sort, {:asc, :id})
+      |> Map.put_new(:page_size, get_config(resource, :page_size, 10))
 
     query =
       resource.schema
-      |> limit(10)
-      |> offset(^((opts[:page] - 1) * 10))
+      |> limit(^opts[:page_size])
+      |> offset(^((opts[:page] - 1) * opts[:page_size]))
       |> order_by(^[opts[:sort]])
       |> preload(^preloads(resource))
 
